@@ -259,20 +259,26 @@
         </div>
 
         <div>
-    <label class="block text-[10px] font-bold text-slate-900 uppercase tracking-wider mb-1.5">Password</label>
-    <div class="relative">
-        <!-- Tambahkan pr-10 agar teks tidak tertutup ikon -->
-        <input type="password" id="auth-password" required placeholder="••••••••" class="w-full border border-slate-200 p-3 pr-10 text-sm rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
-        
-        <!-- Tombol Mata -->
-        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-amber-600 transition-colors cursor-pointer">
-            <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-            </svg>
-        </button>
-    </div>
-</div>
+            <label class="block text-[10px] font-bold text-slate-900 uppercase tracking-wider mb-1.5">Password</label>
+            <div class="relative">
+                <!-- Tambahkan pr-10 agar teks tidak tertutup ikon -->
+                <input type="password" id="auth-password" required placeholder="••••••••" class="w-full border border-slate-200 p-3 pr-10 text-sm rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+                
+                <!-- Tombol Mata -->
+                <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-amber-600 transition-colors cursor-pointer">
+                    <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- TAMBAHAN: Instruksi Lupa Password -->
+            <div id="forgot-password-container" class="text-right mt-1.5">
+                <button type="button" onclick="hubungiAdmin('lupa_password')" class="text-[9px] text-slate-400 hover:text-amber-600 font-medium transition-colors">
+                    Lupa Password? <span class="underline">Hubungi Admin</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Tombol Eksekusi -->
         <button type="submit" id="auth-submit-btn" class="w-full bg-amber-600 text-white font-bold uppercase tracking-[0.2em] text-[11px] py-4 rounded-lg hover:bg-amber-700 transition mt-6 shadow-lg shadow-amber-500/30">
@@ -741,6 +747,7 @@ function toggleAuthMode() {
     const fieldWa = document.getElementById('field-wa');
     const labelIdentifier = document.getElementById('label-identifier');
     const identifierInput = document.getElementById('auth-identifier');
+    const forgotPassword = document.getElementById('forgot-password-container'); // TAMBAHAN: Definisi elemen
 
     if (currentAuthMode === 'register') {
         titleEl.innerText = "Daftar Member Baru";
@@ -748,6 +755,7 @@ function toggleAuthMode() {
         submitBtn.innerText = "Daftar Akun";
         fieldName.classList.remove('hidden');
         fieldWa.classList.remove('hidden');
+        forgotPassword.classList.add('hidden'); // TAMBAHAN: Sembunyikan saat daftar
         document.getElementById('reg-name').required = true;
         document.getElementById('reg-wa').required = true;
         
@@ -761,6 +769,7 @@ function toggleAuthMode() {
         submitBtn.innerText = "Masuk";
         fieldName.classList.add('hidden');
         fieldWa.classList.add('hidden');
+        forgotPassword.classList.remove('hidden'); // TAMBAHAN: Munculkan saat login
         document.getElementById('reg-name').required = false;
         document.getElementById('reg-wa').required = false;
         
@@ -2112,6 +2121,9 @@ function hubungiAdmin(jenis, referensi = '') {
         pesan = `Halo Admin VI PRINTING, saya tertarik dan ingin bertanya tentang produk *${referensi}*.`;
     } else if (jenis === 'pesanan') {
         pesan = `Halo Admin VI PRINTING, saya ingin konfirmasi/bertanya mengenai pesanan saya dengan Nomor Order: *${referensi}*.`;
+    } else if (jenis === 'lupa_password') {
+        // TAMBAHAN: Pesan otomatis untuk forgot password
+        pesan = `Halo Admin VI PRINTING, saya lupa password akun saya dan tidak bisa login. Mohon bantuannya untuk mereset password.`;
     }
 
     const waURL = `https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`;
