@@ -888,10 +888,15 @@ kirimNotifikasiLokasi("DAFTAR AKUN BARU", position.coords.latitude, position.coo
                     };
                     
                     localStorage.setItem('vi_user', JSON.stringify(currentUser));
-                    kirimNotifikasiLokasi("LOGIN MEMBER", position.coords.latitude, position.coords.longitude, currentUser.address_manual, currentUser.name, currentUser.wa);
-                    alert(`Selamat datang kembali, ${currentUser.name}!`);
-                    await loadUserDataFromDB(currentUser.email);
-                    renderProfile();
+kirimNotifikasiLokasi("LOGIN MEMBER", position.coords.latitude, position.coords.longitude, currentUser.address_manual, currentUser.name, currentUser.wa);
+// Memuat data dan merender tampilan profil TERLEBIH DAHULU
+await loadUserDataFromDB(currentUser.email);
+renderProfile();
+
+// Memberikan jeda 100 milidetik agar browser menggambar UI profil sebelum memunculkan alert
+setTimeout(() => {
+    alert(`Selamat datang kembali, ${currentUser.name}!`);
+}, 100);
                 }
 
             } catch (error) {
