@@ -445,47 +445,197 @@
     </div>
 
     <div id="modal-invitation" class="fixed inset-0 bg-slate-900/80 hidden z-[150] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in zoom-in duration-200 border border-slate-200">
-            <button onclick="document.getElementById('modal-invitation').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-50 p-1.5 rounded-full">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <div class="flex items-center gap-2 mb-1">
-                <div class="w-6 h-6 bg-amber-100 text-amber-600 rounded flex items-center justify-center">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                </div>
-                <h3 class="text-lg font-bold serif-font text-slate-900">Konsep Undangan</h3>
+    <!-- Perhatikan p-5 diubah menjadi px-5 pb-5 pt-0 agar bagian sticky bisa menempel sempurna di atap modal -->
+<div class="bg-white w-full max-w-2xl rounded-2xl px-5 pb-5 pt-0 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in zoom-in duration-200 border border-slate-200 custom-scroll">
+    
+    <!-- Header & Tombol Tutup (Sticky) -->
+    <div class="flex justify-between items-center sticky top-0 bg-white z-50 pt-5 pb-3 mb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+            <div class="w-6 h-6 bg-amber-100 text-amber-600 rounded flex items-center justify-center">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
             </div>
-            <p class="text-[9px] uppercase tracking-widest text-slate-500 mb-5 ml-8">Lengkapi data untuk pesanan Anda</p>
-            
-            <form onsubmit="saveInvitationConcept(event)" class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mempelai Pria</label>
-                        <input type="text" id="inv-groom" required placeholder="Romeo" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
-                    </div>
-                    <div>
-                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mempelai Wanita</label>
-                        <input type="text" id="inv-bride" required placeholder="Juliet" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tanggal Acara</label>
-                    <input type="date" id="inv-date" required class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Jumlah Pesanan (Pcs)</label>
-                    <input type="number" id="inv-qty" min="50" value="100" required class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Catatan / Tema Warna</label>
-                    <textarea id="inv-notes" rows="2" placeholder="Misal: Tema Sage Green & Gold" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-slate-900 text-white font-bold text-[10px] uppercase tracking-widest py-3.5 rounded-lg hover:bg-slate-800 transition shadow-lg mt-2">
-                    Simpan & Masukkan Keranjang
-                </button>
-            </form>
+            <h3 class="text-lg font-bold serif-font text-slate-900">Konsep Undangan</h3>
+        </div>
+        
+        <button onclick="document.getElementById('modal-invitation').classList.add('hidden'); resetFormUndangan();" class="text-slate-500 hover:text-red-600 bg-white border border-slate-200 shadow-sm p-1.5 rounded-full transition-all active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+    
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-3 mb-5 rounded-r-lg">
+            <p class="text-[10px] text-amber-800 font-medium mb-1">📌 Kosongkan bagian yang tidak ingin digunakan</p>
+            <p class="text-[10px] text-amber-800 font-medium">📌 Mohon untuk TIDAK menggunakan huruf kapital keseluruhan</p>
+        </div>
+        
+        <form id="invitation-concept-form" onsubmit="saveInvitationConcept(event)" class="space-y-6">
+<!-- 1. Urutan Nama -->
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 transition-colors" id="urutan-container">
+    <label class="block text-[10px] font-bold text-slate-900 uppercase tracking-wider mb-2">Nama yang ditulis lebih dulu di Cover <span class="text-red-500">*</span></label>
+    <div class="flex gap-4">
+        <label class="flex items-center gap-2 cursor-pointer">
+            <!-- Atribut 'checked' TELAH DIHAPUS -->
+            <input type="radio" name="inv-urutan" value="Pria - Wanita" onchange="toggleOrder()" class="w-4 h-4 text-amber-600 focus:ring-amber-500 border-gray-300">
+            <span class="text-xs text-slate-700">Pria / Wanita</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <!-- Atribut 'checked' TELAH DIHAPUS -->
+            <input type="radio" name="inv-urutan" value="Wanita - Pria" onchange="toggleOrder()" class="w-4 h-4 text-amber-600 focus:ring-amber-500 border-gray-300">
+            <span class="text-xs text-slate-700">Wanita / Pria</span>
+        </label>
+    </div>
+    <!-- Peringatan error tersembunyi -->
+    <p id="urutan-error" class="text-[9px] text-red-500 font-bold uppercase tracking-widest mt-2 hidden animate-pulse">⚠️ Wajib memilih urutan nama terlebih dahulu</p>
+</div>
+
+<!-- Container form dikunci dengan opacity-30 dan pointer-events-none -->
+<div id="bride-groom-container" class="flex flex-col gap-6 mt-6 opacity-30 pointer-events-none transition-opacity duration-300">   
+    <!-- Mempelai Wanita -->
+    <div id="section-bride" class="space-y-3 order-1 transition-all duration-300">
+        <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+            <span>👰 Mempelai Wanita</span>
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                <input type="text" id="inv-bride-fullname" placeholder="Contoh: Siti Aisyah" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Panggilan</label>
+                <input type="text" id="inv-bride-nickname" placeholder="Contoh: Aisyah" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Anak ke berapa</label>
+                <input type="text" id="inv-bride-child-order" placeholder="Contoh: Pertama / Ke-1" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Bapak (Wanita)</label>
+                <input type="text" id="inv-bride-father" placeholder="Nama Bapak" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Ibu (Wanita)</label>
+                <input type="text" id="inv-bride-mother" placeholder="Nama Ibu" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
         </div>
     </div>
+
+    <!-- Mempelai Pria -->
+    <div id="section-groom" class="space-y-3 order-2 transition-all duration-300">
+        <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+            <span>🤵 Mempelai Pria</span>
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                <input type="text" id="inv-groom-fullname" placeholder="Contoh: Ahmad Budi" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Panggilan</label>
+                <input type="text" id="inv-groom-nickname" placeholder="Contoh: Budi" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Anak ke berapa</label>
+                <input type="text" id="inv-groom-child-order" placeholder="Contoh: Kedua / Ke-2" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Bapak (Pria)</label>
+                <input type="text" id="inv-groom-father" placeholder="Nama Bapak" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Ibu (Pria)</label>
+                <input type="text" id="inv-groom-mother" placeholder="Nama Ibu" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- 4. Akad Nikah -->
+            <div class="space-y-3">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+                    <span>🗓 Akad Nikah</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Hari dan Tanggal</label>
+                        <input type="text" id="inv-akad-date" placeholder="Contoh: Minggu, 20 Agustus 2026" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Pukul</label>
+                        <input type="text" id="inv-akad-time" placeholder="Contoh: 09.00 WITA - Selesai" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tempat & Alamat</label>
+                    <textarea id="inv-akad-location" rows="2" placeholder="Contoh: Masjid Raya Makassar, Jl. Bawakaraeng..." class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50"></textarea>
+                </div>
+            </div>
+
+            <!-- 5. Resepsi -->
+            <div class="space-y-3">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+                    <span>🗓 Resepsi</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Hari dan Tanggal</label>
+                        <input type="text" id="inv-reception-date" placeholder="Contoh: Minggu, 20 Agustus 2026" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Pukul</label>
+                        <input type="text" id="inv-reception-time" placeholder="Contoh: 11.00 WITA - Selesai" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tempat & Alamat</label>
+                    <textarea id="inv-reception-location" rows="2" placeholder="Contoh: Gedung Serbaguna, Jl. AP Pettarani..." class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50"></textarea>
+                </div>
+            </div>
+
+            <!-- 6. Lain-lain -->
+            <div class="space-y-3">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+                    <span>📝 Tambahan</span>
+                </h4>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Hormat Kami Yang Mengundang</label>
+                    <textarea id="inv-hosts" rows="2" placeholder="Keluarga Besar Bpk. Ahmad & Keluarga Besar Bpk. Budi" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50"></textarea>
+                </div>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Turut Mengundang (Pisahkan dengan baris baru)</label>
+                    <textarea id="inv-cohosts" rows="3" placeholder="1. Bpk. Haji Hasan&#10;2. Ibu Hj. Aminah" class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-slate-50"></textarea>
+                </div>
+            </div>
+
+            <!-- Detail Orderan -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2 border-b border-slate-200 pb-2">
+                    <span>📦 Detail Pesanan</span>
+                </h4>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Jumlah Pesanan (Pcs)</label>
+                    <input type="number" id="inv-qty" min="50" value="100" required class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-white">
+                </div>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Catatan Khusus (Opsional)</label>
+                    <textarea id="inv-notes" rows="2" placeholder="Misal: Tema Sage Green & Gold, Tambahkan Denah Lokasi..." class="w-full border border-slate-200 p-2.5 text-xs rounded-lg focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition bg-white"></textarea>
+                </div>
+            </div>
+
+            <div class="sticky bottom-0 bg-white pt-2 pb-2 mt-4 space-y-2 border-t border-slate-100">
+                <button type="submit" class="w-full bg-slate-900 text-white font-bold text-[10px] uppercase tracking-widest py-3.5 rounded-lg hover:bg-slate-800 transition shadow-lg">
+                    Simpan & Masukkan Keranjang
+                </button>
+                
+                <button type="button" onclick="skipInvitationConcept()" class="w-full bg-slate-50 text-slate-500 font-bold text-[10px] uppercase tracking-widest py-3.5 rounded-lg hover:bg-slate-100 hover:text-slate-700 border border-slate-200 transition">
+                    Lewati (Isi Data Nanti)
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
     <div id="fullscreen-viewer" class="fixed inset-0 z-[200] zoom-overlay hidden flex flex-col items-center justify-center" onclick="tutupFullscreen()">
         <button class="absolute top-6 right-6 z-[220] text-white/70 bg-white/10 p-2.5 rounded-full hover:bg-white/20 transition-all backdrop-blur-md border border-white/10">
@@ -565,6 +715,27 @@ let typingTimer;
 
 // Inisialisasi Supabase Client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+
+function skipInvitationConcept() {
+            const product = listProduk.find(p => p.id == currentSelectedProductId);
+            
+            // Ambil jumlah pesanan (qty), biarkan sisanya kosong (null)
+            const qtyInput = document.getElementById('inv-qty').value;
+            const qty = parseInt(qtyInput) || 100; // Default ke 100 jika kosong/error
+
+            // Kirim ke keranjang dengan concept bernilai null
+            tambahKeKeranjang(product, qty, null);
+            
+            // Tutup modal dan bersihkan form
+            document.getElementById('modal-invitation').classList.add('hidden');
+            tutupModal();
+            document.querySelector('#modal-invitation form').reset();
+            
+            alert(`Pesanan undangan ${product.nama} berhasil dimasukkan keranjang (Tanpa Data)!`);
+            switchView('cart');
+        }
 
 // Fungsi untuk mulai mendengarkan update pesanan
 function listenToOrderUpdates() {
@@ -1528,27 +1699,145 @@ async function simpanProfilAlamat(btn) {
             }
         }
 
-        function saveInvitationConcept(e) {
-            e.preventDefault();
-            const product = listProduk.find(p => p.id == currentSelectedProductId);
+// Fungsi untuk menukar urutan dan membuka kunci form
+function toggleOrder() {
+    const urutanEl = document.querySelector('input[name="inv-urutan"]:checked');
+    const sectionBride = document.getElementById('section-bride');
+    const sectionGroom = document.getElementById('section-groom');
+    const container = document.getElementById('bride-groom-container');
+    const errorMsg = document.getElementById('urutan-error');
+    const urutanContainer = document.getElementById('urutan-container');
+    
+    // Jika pengguna sudah memilih, hilangkan peringatan dan buka kunci form
+    if(urutanEl) {
+        errorMsg.classList.add('hidden');
+        urutanContainer.classList.remove('border-red-300', 'bg-red-50');
+        container.classList.remove('opacity-30', 'pointer-events-none');
+    }
+    
+    // Animasi transisi
+    sectionBride.style.opacity = '0';
+    sectionGroom.style.opacity = '0';
+    
+    setTimeout(() => {
+        if (urutanEl && urutanEl.value === 'Pria - Wanita') {
+            sectionGroom.classList.remove('order-2');
+            sectionGroom.classList.add('order-1');
             
-            const concept = {
-                groom: document.getElementById('inv-groom').value,
-                bride: document.getElementById('inv-bride').value,
-                date: document.getElementById('inv-date').value,
-                notes: document.getElementById('inv-notes').value
-            };
-            const qty = parseInt(document.getElementById('inv-qty').value) || 100;
-
-            tambahKeKeranjang(product, qty, concept);
+            sectionBride.classList.remove('order-1');
+            sectionBride.classList.add('order-2');
+        } else {
+            sectionBride.classList.remove('order-2');
+            sectionBride.classList.add('order-1');
             
-            document.getElementById('modal-invitation').classList.add('hidden');
-            tutupModal();
-            e.target.reset();
-            
-            alert(`Pesanan undangan untuk ${concept.groom} & ${concept.bride} berhasil dimasukkan keranjang!`);
-            switchView('cart');
+            sectionGroom.classList.remove('order-1');
+            sectionGroom.classList.add('order-2');
         }
+        
+        sectionBride.style.opacity = '1';
+        sectionGroom.style.opacity = '1';
+    }, 150);
+}
+
+// Update fungsi Simpan untuk memeriksa apakah urutan sudah dipilih
+function saveInvitationConcept(e) {
+    e.preventDefault();
+    
+    // --- VALIDASI AWAL ---
+    const urutanEl = document.querySelector('input[name="inv-urutan"]:checked');
+    
+    // Jika belum dipilih, tampilkan error dan cegah proses penyimpanan
+    if (!urutanEl) {
+        const errorMsg = document.getElementById('urutan-error');
+        const urutanContainer = document.getElementById('urutan-container');
+        
+        errorMsg.classList.remove('hidden');
+        urutanContainer.classList.add('border-red-300', 'bg-red-50');
+        urutanContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return; 
+    }
+    
+    const product = listProduk.find(p => p.id == currentSelectedProductId);
+    const urutanNama = urutanEl.value;
+
+    const concept = {
+        urutan_nama: urutanNama,
+        bride: {
+            fullname: document.getElementById('inv-bride-fullname').value,
+            nickname: document.getElementById('inv-bride-nickname').value,
+            child_order: document.getElementById('inv-bride-child-order').value,
+            father: document.getElementById('inv-bride-father').value,
+            mother: document.getElementById('inv-bride-mother').value,
+        },
+        groom: {
+            fullname: document.getElementById('inv-groom-fullname').value,
+            nickname: document.getElementById('inv-groom-nickname').value,
+            child_order: document.getElementById('inv-groom-child-order').value,
+            father: document.getElementById('inv-groom-father').value,
+            mother: document.getElementById('inv-groom-mother').value,
+        },
+        akad: {
+            date: document.getElementById('inv-akad-date').value,
+            time: document.getElementById('inv-akad-time').value,
+            location: document.getElementById('inv-akad-location').value,
+        },
+        reception: {
+            date: document.getElementById('inv-reception-date').value,
+            time: document.getElementById('inv-reception-time').value,
+            location: document.getElementById('inv-reception-location').value,
+        },
+        hosts: document.getElementById('inv-hosts').value,
+        cohosts: document.getElementById('inv-cohosts').value,
+        notes: document.getElementById('inv-notes').value
+    };
+    const qty = parseInt(document.getElementById('inv-qty').value) || 100;
+
+    tambahKeKeranjang(product, qty, concept);
+    
+    document.getElementById('modal-invitation').classList.add('hidden');
+    tutupModal();
+    
+    resetFormUndangan(); // Kunci kembali form untuk pemesanan berikutnya
+    
+    const groomName = concept.groom.nickname || "Pria";
+    const brideName = concept.bride.nickname || "Wanita";
+    alert(`Pesanan undangan untuk ${groomName} & ${brideName} berhasil dimasukkan keranjang!`);
+    switchView('cart');
+}
+
+// Hapus satu fungsi `skipInvitationConcept` Anda yang ganda. Gunakan yang ini:
+function skipInvitationConcept() {
+    const product = listProduk.find(p => p.id == currentSelectedProductId);
+    
+    const qtyInput = document.getElementById('inv-qty').value;
+    const qty = parseInt(qtyInput) || 100;
+
+    tambahKeKeranjang(product, qty, null);
+    
+    document.getElementById('modal-invitation').classList.add('hidden');
+    tutupModal();
+    
+    resetFormUndangan(); // Kunci kembali form untuk pemesanan berikutnya
+    
+    alert(`Pesanan undangan ${product.nama} berhasil dimasukkan keranjang (Tanpa Data)!`);
+    switchView('cart');
+}
+
+// Fungsi helper ini mengembalikan kondisi form seperti semula
+function resetFormUndangan() {
+    document.getElementById('invitation-concept-form').reset();
+    
+    // Kunci kembali form pengantin
+    document.getElementById('bride-groom-container').classList.add('opacity-30', 'pointer-events-none');
+    
+    // Hilangkan tampilan error
+    document.getElementById('urutan-error').classList.add('hidden');
+    document.getElementById('urutan-container').classList.remove('border-red-300', 'bg-red-50');
+    
+    // Kembalikan posisi awal visual
+    document.getElementById('section-bride').classList.replace('order-2', 'order-1');
+    document.getElementById('section-groom').classList.replace('order-1', 'order-2');
+}
 
 function tambahKeKeranjang(product, qty, concept) {
     if (!currentUser) return; // Keamanan tambahan
@@ -1654,14 +1943,19 @@ function updateCartQty(index, delta, renderUlang = true) {
                 const daftarGambar = item.gambar.split(',');
                 
                 let conceptHTML = '';
-                if (item.concept) {
-                    conceptHTML = `
-                        <div class="mt-2 bg-slate-50 border border-slate-100 p-2 rounded text-[9px] text-slate-600">
-                            <span class="font-bold text-amber-600">❤ ${item.concept.groom} & ${item.concept.bride}</span><br>
-                            Tgl: ${item.concept.date} | Ket: ${item.concept.notes || '-'}
-                        </div>
-                    `;
-                }
+        if (item.concept) {
+            const groomName = item.concept.groom?.nickname || "Pria";
+            const brideName = item.concept.bride?.nickname || "Wanita";
+            const akadDate = item.concept.akad?.date || "-";
+            const notes = item.concept.notes || "-";
+            
+            conceptHTML = `
+                <div class="mt-2 bg-slate-50 border border-slate-100 p-2 rounded text-[9px] text-slate-600">
+                    <span class="font-bold text-amber-600">❤ ${groomName} & ${brideName}</span><br>
+                    Tgl Akad: ${akadDate} | Ket: ${notes}
+                </div>
+            `;
+        }
 
              return `
 <div class="flex gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm relative group">
