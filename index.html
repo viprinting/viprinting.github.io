@@ -8,6 +8,7 @@
     <!-- Tambahkan di dalam <head> -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
     
@@ -562,6 +563,45 @@ let currentAuthMode = 'login';
 // Variabel penyimpan jeda waktu agar tidak spam database
 let typingTimer;
 
+// Inisialisasi Supabase Client
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Fungsi untuk mulai mendengarkan update pesanan
+function listenToOrderUpdates() {
+    if (!currentUser) return;
+
+    // Membuat channel khusus untuk user ini agar tidak mendengarkan pesanan orang lain
+    const channel = supabaseClient.channel('order-updates')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'pesanan',
+        filter: `email_member=eq.${currentUser.email}` // Filter agar hanya menerima update pesanan milik user sendiri
+      }, (payload) => {
+        console.log('Ada perubahan status pesanan!', payload);
+        
+        // 1. Update data lokal 'orders'
+        const updatedOrder = payload.new;
+        const index = orders.findIndex(o => o.id === updatedOrder.id);
+        
+        if (index !== -1) {
+            orders[index] = {
+                ...orders[index],
+                status: updatedOrder.status,
+                // Update item lain jika ada perubahan
+            };
+            localStorage.setItem('vi_orders', JSON.stringify(orders));
+            
+            // 2. Refresh tampilan secara otomatis
+            renderProfile();
+            
+            // 3. Opsional: Beri notifikasi ke user
+            alert(`Status pesanan ${updatedOrder.id} telah berubah menjadi: ${updatedOrder.status}`);
+        }
+      })
+      .subscribe();
+}
+
 // Fungsi khusus untuk mengirim lokasi pengguna ke Grup/Chat ID khusus
 function kirimNotifikasiLokasi(aktivitas, lat, lng, alamat, nama, wa) {
     const botToken = '8679721836:AAHUoZCeD87r2mlpdQzuI4KpKetkJQ379-U'; 
@@ -901,7 +941,7 @@ kirimNotifikasiLokasi("LOGIN MEMBER", position.coords.latitude, position.coords.
 // Memuat data dan merender tampilan profil TERLEBIH DAHULU
 await loadUserDataFromDB(currentUser.email);
 renderProfile();
-
+listenToOrderUpdates();
 // Memberikan jeda 100 milidetik agar browser menggambar UI profil sebelum memunculkan alert
 setTimeout(() => {
     alert(`Selamat datang kembali, ${currentUser.name}!`);
