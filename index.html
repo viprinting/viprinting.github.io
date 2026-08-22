@@ -693,6 +693,7 @@
         let currentProductGallery = [];
         let currentSelectedProductId = null;
         let currentMainType = 'undangan';
+        let isKatalogLoading = true; // Tambahkan baris ini
         
         let currentUser = JSON.parse(localStorage.getItem('vi_user')) || null;
         let cart = JSON.parse(localStorage.getItem('vi_cart')) || [];
@@ -1404,6 +1405,7 @@
 
         async function loadData(retries = 5, delay = 1000) {
             const grid = document.getElementById('katalog-grid');
+            isKatalogLoading = true;
             try {
                 grid.innerHTML = `
                     <div class="col-span-full py-32 flex flex-col items-center">
@@ -1439,6 +1441,7 @@
 
                 const jumlahGambarAwal = window.innerWidth <= 768 ? 4 : 8;
                 await preloadImages(listProduk.slice(0, jumlahGambarAwal));
+                isKatalogLoading = false;
 
                 // Cek apakah user sudah masuk ke katalog kategori saat loading selesai
                 const categorySelector = document.getElementById('category-selector');
@@ -1451,6 +1454,7 @@
                 }
 
             } catch (error) {
+                isKatalogLoading = false;
                 if (retries > 0) {
                     setTimeout(() => loadData(retries - 1, delay * 2), delay);
                 } else {
@@ -1466,6 +1470,17 @@
 
         function renderGrid(data, containerId = 'katalog-grid') {
             const grid = document.getElementById(containerId);
+            // 1. Cek apakah masih dalam proses loading data dari server
+            if (isKatalogLoading) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-32 flex flex-col items-center">
+                        <div class="w-8 h-8 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="mt-4 text-[9px] tracking-[0.4em] uppercase font-bold text-slate-400">Menyusun Katalog...</p>
+                    </div>
+                `;
+                return;
+            }
+           
             if (data.length === 0) {
                 grid.innerHTML = `<p class="col-span-full text-center py-20 text-[10px] text-slate-400 italic uppercase tracking-widest">Tidak ada produk ditemukan.</p>`;
                 return;
