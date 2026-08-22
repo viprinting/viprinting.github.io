@@ -1440,8 +1440,15 @@
                 const jumlahGambarAwal = window.innerWidth <= 768 ? 4 : 8;
                 await preloadImages(listProduk.slice(0, jumlahGambarAwal));
 
-                // Jangan render grid produk awal, biarkan user memilih kategori di layar awal
-                grid.innerHTML = ''; 
+                // Cek apakah user sudah masuk ke katalog kategori saat loading selesai
+                const categorySelector = document.getElementById('category-selector');
+                if (categorySelector.classList.contains('hidden')) {
+                    // Jika sudah memilih kategori, render ulang produk sesuai kategori yang aktif
+                    openCategory(currentMainType);
+                } else {
+                    // Jika masih di menu utama, kosongkan grid produk
+                    grid.innerHTML = ''; 
+                }
 
             } catch (error) {
                 if (retries > 0) {
