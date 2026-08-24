@@ -176,6 +176,21 @@
 
                     <!-- Filter Kategori (Hanya muncul saat Katalog Undangan aktif) -->
                     <div class="relative" id="filter-undangan-container" style="display: none;">
+                        
+                        <!-- BANNER INFO BONUS UNDANGAN -->
+                        <div class="flex items-center justify-between bg-amber-50 border border-amber-200/60 rounded-lg p-2.5 mb-2.5 animate-in fade-in slide-in-from-top-2">
+                            <div class="flex items-center gap-2">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 text-amber-600 shrink-0">🎁</span>
+                                <p class="text-[9px] md:text-[10px] text-amber-800 font-medium leading-tight">
+                                    Info detail mengenai <span class="font-bold">Bonus Tambahan Cetak Undangan</span>, silakan hubungi admin.
+                                </p>
+                            </div>
+                            <button onclick="hubungiAdmin('produk', 'Info Bonus Undangan')" class="ml-2 shrink-0 bg-amber-500 hover:bg-amber-600 text-white text-[8px] md:text-[9px] font-bold uppercase px-2 py-1.5 rounded transition-colors shadow-sm whitespace-nowrap">
+                                Chat Admin
+                            </button>
+                        </div>
+                        <!-- END BANNER INFO BONUS UNDANGAN -->
+
                         <nav id="filter-wrapper" class="relative flex items-center bg-slate-100/50 p-1 rounded-lg overflow-x-auto no-scrollbar border border-slate-200">
                             <div id="active-indicator" class="active-pill"></div>
                             <button onclick="filterData('Semua', this)" class="filter-btn px-4 py-1.5 text-[9px] md:text-[10px] font-bold uppercase active">Semua</button>
@@ -191,6 +206,24 @@
 
         <main id="view-home" class="view-section active max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8 bg-white min-h-screen">
             
+            <!-- BANNER ULASAN GOOGLE MAPS -->
+            <a href="https://g.page/r/CUZNHVBbqmlfEBM/review" target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between bg-white border border-slate-200 p-4 rounded-2xl shadow-sm hover:shadow-xl hover:border-amber-500 transition-all duration-300 mb-2 w-full max-w-2xl mx-auto animate-in fade-in slide-in-from-top-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center group-hover:bg-amber-50 group-hover:scale-110 transition-all duration-300 shrink-0">
+                        <!-- SVG Ikon Bintang Google -->
+                        <svg class="w-6 h-6 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-[11px] md:text-xs font-bold text-slate-900 uppercase tracking-widest mb-0.5">Puas Dengan Layanan Kami?</h4>
+                        <p class="text-[9px] md:text-[10px] text-slate-500 uppercase tracking-wider">Bantu berikan ulasan di Google Maps</p>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors border border-slate-100 group-hover:border-amber-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </a>
+            <!-- END BANNER ULASAN GOOGLE MAPS -->
+
             <!-- TOMBOL PILIHAN KATEGORI AWAL -->
             <div id="category-selector" class="flex flex-col items-center justify-center flex-grow py-8 md:py-16 px-4 animate-in fade-in duration-500">
                 <h2 class="text-xl md:text-3xl font-bold serif-font text-slate-900 mb-2 text-center uppercase tracking-widest">Pilih Kategori</h2>
@@ -361,7 +394,19 @@
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
-                    <h4 class="font-bold text-[11px] text-slate-900 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Riwayat Pesanan COD</h4>
+                    <h4 class="font-bold text-[11px] text-slate-900 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">Riwayat Pesanan COD</h4>
+                    
+                    <!-- BANNER INFO NOTA WA -->
+                    <div class="bg-[#25D366]/10 border border-[#25D366]/20 rounded-xl p-3 mb-4 flex gap-3 items-start">
+                        <div class="w-6 h-6 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.183-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.765-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.031 22c-1.144 0-2.28-.276-3.32-.821l-7.054 1.85 1.884-6.883c-.636-1.114-.972-2.394-.972-3.712 0-5.511 4.489-10 10-10s10 4.489 10 10-4.489 10-10 10z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[9px] md:text-[10px] text-slate-600 leading-relaxed font-medium">Nota / Struk pesanan akan dikirimkan secara otomatis via WhatsApp saat status pesanan Anda berubah menjadi <span class="font-bold text-[#25D366]">"Diproses"</span>.</p>
+                        </div>
+                    </div>
+                    <!-- END BANNER INFO NOTA WA -->
+
                     <div id="order-history-list" class="space-y-3"></div>
                 </div>
 
@@ -2101,12 +2146,12 @@ function hitungDetailPromo(item, currentQty) {
                         orders.unshift(newOrderLocal); 
                         localStorage.setItem('vi_orders', JSON.stringify(orders));
                         
-                        cart = []; 
+                       cart = []; 
                         localStorage.setItem('vi_cart', JSON.stringify(cart));
                         updateCartBadge();
                         
-                        alert('Sukses! Pesanan COD Anda berhasil dibuat.');
-                        switchView('profile'); 
+                        alert('Sukses! Pesanan COD Anda berhasil dibuat.\n\nNota digital akan dikirimkan secara otomatis via WhatsApp saat pesanan Anda mulai diproses oleh admin.');
+                        switchView('profile');
 
                     } catch(err) {
                         alert("Error Checkout: " + err.message);
@@ -2325,6 +2370,8 @@ function hitungDetailPromo(item, currentQty) {
             
             if (jenis === 'produk') {
                 pesan = `Halo Admin VI PRINTING, saya tertarik dan ingin bertanya tentang produk *${referensi}*.`;
+            } else if (jenis === 'bonus') {
+                pesan = `Halo Admin VI PRINTING, saya mau bertanya, apa saja daftar bonus tambahan yang didapatkan untuk cetak undangan pernikahan?`;
             } else if (jenis === 'pesanan') {
                 pesan = `Halo Admin VI PRINTING, saya ingin konfirmasi/bertanya mengenai pesanan saya dengan Nomor Order: *${referensi}*.`;
             } else if (jenis === 'lupa_password') {
