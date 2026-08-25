@@ -755,38 +755,69 @@
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- FUNGSI NAVIGASI KATEGORI AWAL ---
-        function openCategory(type) {
-            currentMainType = type;
-            document.getElementById('category-selector').classList.add('hidden');
-            document.getElementById('product-list-container').classList.remove('hidden');
-            
-            const filterContainer = document.getElementById('filter-undangan-container');
-            const titleKategori = document.getElementById('kategori-title');
-            
-            if (type === 'undangan') {
-                titleKategori.innerText = "Katalog Undangan";
-                filterContainer.style.display = 'block'; // Tampilkan menu slide filter
-                
-                const btnSemua = document.querySelector('.filter-btn');
-                if(btnSemua) filterData('Semua', btnSemua);
-            } else {
-                titleKategori.innerText = "Jasa & ATK";
-                filterContainer.style.display = 'none'; // Sembunyikan menu slide filter
-                
-                const dataTambahan = listProduk.filter(p => !p.kategori.toLowerCase().includes('undangan') && !p.nama.toLowerCase().includes('undangan') && !p.kategori.toLowerCase().includes('premium'));
-                renderGrid(dataTambahan, 'katalog-grid');
-            }
-            
-            window.scrollTo(0, 0);
-        }
+  function switchView(viewId, isHistoryEvent = false) {
+    if (!isHistoryEvent) {
+        history.pushState({ page: viewId, category: null }, "", "#" + viewId);
+    }
+    
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${viewId}`).classList.add('active');
+    
+    const homeHeader = document.getElementById('home-header');
+    if(viewId === 'home') {
+        homeHeader.style.display = 'block';
+        if (!isHistoryEvent) backToCategories(true); // Reset ke awal jika tombol home ditekan
+    } else {
+        homeHeader.style.display = 'none';
+    }
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-amber-600');
+        btn.classList.add('text-slate-400');
+    });
+    document.getElementById(`nav-${viewId}`).classList.remove('text-slate-400');
+    document.getElementById(`nav-${viewId}`).classList.add('text-amber-600');
+    
+    if(viewId === 'cart') renderCart();
+    if(viewId === 'profile') renderProfile();
+    
+    window.scrollTo(0, 0);
+}
 
-        function backToCategories() {
-            document.getElementById('category-selector').classList.remove('hidden');
-            document.getElementById('product-list-container').classList.add('hidden');
-            document.getElementById('filter-undangan-container').style.display = 'none';
-            window.scrollTo(0, 0);
-        }
+function openCategory(type, isHistoryEvent = false) {
+    if (!isHistoryEvent) {
+        history.pushState({ page: 'home', category: type }, "", "#kategori-" + type);
+    }
+    currentMainType = type;
+    document.getElementById('category-selector').classList.add('hidden');
+    document.getElementById('product-list-container').classList.remove('hidden');
+    
+    const filterContainer = document.getElementById('filter-undangan-container');
+    const titleKategori = document.getElementById('kategori-title');
+    
+    if (type === 'undangan') {
+        titleKategori.innerText = "Katalog Undangan";
+        filterContainer.style.display = 'block'; 
+        const btnSemua = document.querySelector('.filter-btn');
+        if(btnSemua) filterData('Semua', btnSemua);
+    } else {
+        titleKategori.innerText = "Jasa & ATK";
+        filterContainer.style.display = 'none'; 
+        const dataTambahan = listProduk.filter(p => !p.kategori.toLowerCase().includes('undangan') && !p.nama.toLowerCase().includes('undangan') && !p.kategori.toLowerCase().includes('premium'));
+        renderGrid(dataTambahan, 'katalog-grid');
+    }
+    window.scrollTo(0, 0);
+}
+
+function backToCategories(skipHistory = false) {
+    if (!skipHistory) {
+        history.pushState({ page: 'home', category: null }, "", "#home");
+    }
+    document.getElementById('category-selector').classList.remove('hidden');
+    document.getElementById('product-list-container').classList.add('hidden');
+    document.getElementById('filter-undangan-container').style.display = 'none';
+    window.scrollTo(0, 0);
+}
 
         function skipInvitationConcept() {
             const product = listProduk.find(p => p.id == currentSelectedProductId);
@@ -1577,32 +1608,7 @@
             else renderGrid(dataUndangan.filter(i => i.kategori.toLowerCase().includes(query)), 'katalog-grid');
         }
 
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
-            
-            const homeHeader = document.getElementById('home-header');
-            if(viewId === 'home') {
-                homeHeader.style.display = 'block';
-                // Kembali menunjukan layar kategori ketika tombol home di klik dari tab lain
-                backToCategories();
-            } else {
-                homeHeader.style.display = 'none';
-            }
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-amber-600');
-                btn.classList.add('text-slate-400');
-            });
-            document.getElementById(`nav-${viewId}`).classList.remove('text-slate-400');
-            document.getElementById(`nav-${viewId}`).classList.add('text-amber-600');
-            
-            if(viewId === 'cart') renderCart();
-            if(viewId === 'profile') renderProfile();
-            
-            window.scrollTo(0, 0);
-        }
-
+        
         function bukaModalById(id) {
             currentSelectedProductId = id;
             const item = listProduk.find(p => p.id == id);
@@ -2461,18 +2467,92 @@ function hitungDetailPromo(item, currentQty) {
         }
 
         if (window.location.hash) history.replaceState(null, null, ' ');
-        window.addEventListener('popstate', function (event) {
-            const modalDetail = document.getElementById('modal-detail');
-            const fullscreenViewer = document.getElementById('fullscreen-viewer');
-            const modalInvitation = document.getElementById('modal-invitation');
-            
-            if (!fullscreenViewer.classList.contains('hidden')) { fullscreenViewer.classList.add('hidden'); return; }
-            if (!modalInvitation.classList.contains('hidden')) { modalInvitation.classList.add('hidden'); return; }
-            if (!modalDetail.classList.contains('hidden')) { modalDetail.classList.add('hidden'); document.body.style.overflow = 'auto'; return; }
-            history.back();
+
+// Ganti bagian popstate Anda dengan kode ini:
+window.addEventListener('popstate', function (event) {
+    const state = event.state;
+    
+    // PRIORITAS 1: Tutup semua modal yang sedang terbuka secara berurutan
+    const fullscreenViewer = document.getElementById('fullscreen-viewer');
+    if (!fullscreenViewer.classList.contains('hidden')) { 
+        fullscreenViewer.classList.add('hidden'); 
+        return; 
+    }
+
+    const modalMap = document.getElementById('modal-map');
+    if (!modalMap.classList.contains('hidden')) { 
+        modalMap.classList.add('hidden'); 
+        return; 
+    }
+
+    const modalInvitation = document.getElementById('modal-invitation');
+    if (!modalInvitation.classList.contains('hidden')) { 
+        modalInvitation.classList.add('hidden'); 
+        return; 
+    }
+
+    const modalDetail = document.getElementById('modal-detail');
+    if (!modalDetail.classList.contains('hidden')) { 
+        modalDetail.classList.add('hidden'); 
+        document.body.style.overflow = 'auto'; 
+        return; 
+    }
+
+    // PRIORITAS 2: Handle pergantian View (Tab Bawah) dan Kategori
+    if (state) {
+        // Restore tab yang aktif
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(`view-${state.page}`).classList.add('active');
+        
+        const homeHeader = document.getElementById('home-header');
+        if(state.page === 'home') {
+            homeHeader.style.display = 'block';
+        } else {
+            homeHeader.style.display = 'none';
+        }
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('text-amber-600');
+            btn.classList.add('text-slate-400');
         });
+        document.getElementById(`nav-${state.page}`).classList.remove('text-slate-400');
+        document.getElementById(`nav-${state.page}`).classList.add('text-amber-600');
+        
+        if(state.page === 'cart') renderCart();
+        if(state.page === 'profile') renderProfile();
+
+        // Restore tampilan Kategori jika sedang berada di Tab Home
+        if (state.page === 'home') {
+            if (state.category) {
+                currentMainType = state.category;
+                document.getElementById('category-selector').classList.add('hidden');
+                document.getElementById('product-list-container').classList.remove('hidden');
+                
+                const filterContainer = document.getElementById('filter-undangan-container');
+                const titleKategori = document.getElementById('kategori-title');
+                
+                if (state.category === 'undangan') {
+                    titleKategori.innerText = "Katalog Undangan";
+                    filterContainer.style.display = 'block';
+                    const btnSemua = document.querySelector('.filter-btn');
+                    if(btnSemua) filterData('Semua', btnSemua);
+                } else {
+                    titleKategori.innerText = "Jasa & ATK";
+                    filterContainer.style.display = 'none';
+                    const dataTambahan = listProduk.filter(p => !p.kategori.toLowerCase().includes('undangan') && !p.nama.toLowerCase().includes('undangan') && !p.kategori.toLowerCase().includes('premium'));
+                    renderGrid(dataTambahan, 'katalog-grid');
+                }
+            } else {
+                document.getElementById('category-selector').classList.remove('hidden');
+                document.getElementById('product-list-container').classList.add('hidden');
+                document.getElementById('filter-undangan-container').style.display = 'none';
+            }
+        }
+    }
+});
 
         window.onload = async () => {
+           history.replaceState({ page: 'home', category: null }, "", "#home");
             loadData();
             if (currentUser) {
                 await loadUserDataFromDB(currentUser.email);
