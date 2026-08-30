@@ -925,6 +925,29 @@ function backToCategories(skipHistory = false) {
                 promoInfoEl.innerHTML = detail.promoText;
             }
 
+            const priceDisplayEl = document.getElementById(`price-display-${index}`);
+            if (priceDisplayEl) {
+                let pHTML = '';
+                if (detail.qtyPromo > 0 && detail.qtyNormal === 0) {
+                    pHTML = `
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-[9px] line-through text-slate-400">${formatIDR(item.harga)}</span>
+                            <span class="text-[11px] font-bold text-amber-600 italic">${formatIDR(item.harga_promo)}</span>
+                        </div>`;
+                } else if (detail.qtyPromo > 0 && detail.qtyNormal > 0) {
+                    pHTML = `
+                        <div class="flex flex-col mt-0.5">
+                            <span class="text-[11px] font-bold text-amber-600 italic">
+                                ${formatIDR(item.harga_promo)} <span class="text-[8px] font-bold not-italic text-amber-700 bg-amber-100 px-1 py-0.5 ml-1 rounded">Maks. ${item.max_promo || detail.qtyPromo} pcs</span>
+                            </span>
+                            <span class="text-[9px] font-bold text-slate-500 italic mt-0.5">${formatIDR(item.harga)} (Harga Normal)</span>
+                        </div>`;
+                } else {
+                    pHTML = `<div class="text-[11px] font-bold text-slate-900 italic mt-0.5">${formatIDR(item.harga)}</div>`;
+                }
+                priceDisplayEl.innerHTML = pHTML;
+            }
+
             let tempTotal = 0;
             cart.forEach((cItem, i) => {
                 if (i === index) {
@@ -1995,7 +2018,9 @@ container.innerHTML = cart.map((item, index) => {
         <div class="flex-1 flex flex-col justify-between">
             <div class="pr-7">
                 <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-900 leading-tight">${item.nama}</h4>
-                ${priceDisplayHTML}
+                <div id="price-display-${index}">
+                    ${priceDisplayHTML}
+                </div>
                 ${conceptHTML}
                 <div id="promo-info-${index}">${detail.promoText}</div>
             </div>
@@ -2021,17 +2046,28 @@ function hitungDetailPromo(item, currentQty) {
     let qtyPromo = 0;
     let qtyNormal = 0;
     
-    const minPromo = item.min_promo || 1; 
+    // Tentukan batas minimal yang harus dibayar dengan harga normal[cite: 1].
+    // Jika min_promo adalah 1 atau tidak ada, kita anggap tidak ada batas minimal (0).
+    const batasMinNormal = (item.min_promo && item.min_promo > 1) ? item.min_promo : 0;
 
-    if (item.is_promo && item.harga_promo > 0 && currentQty >= minPromo) {
-        if (item.max_promo !== null && currentQty > item.max_promo) {
-            qtyPromo = item.max_promo;
-            qtyNormal = currentQty - item.max_promo;
+    // Pastikan produk adalah produk promo dan qty melebihi batas minimal normal[cite: 1]
+    if (item.is_promo && item.harga_promo > 0 && currentQty > batasMinNormal) {
+        
+        // 1. Hitung berapa qty yang berpotensi mendapatkan promo
+        let potensiQtyPromo = currentQty - batasMinNormal;
+
+        // 2. Terapkan batasan Maksimal Promo (jika ada)
+        if (item.max_promo !== null && item.max_promo > 0) {
+            qtyPromo = Math.min(potensiQtyPromo, item.max_promo);
         } else {
-            qtyPromo = currentQty;
-            qtyNormal = 0;
+            qtyPromo = potensiQtyPromo; // Tanpa batas maksimal
         }
+
+        // 3. Sisa qty otomatis menjadi harga normal (Batas Awal + Kelebihan Maksimal Promo)
+        qtyNormal = currentQty - qtyPromo;
+        
     } else {
+        // Jika belum melewati batas minimal atau bukan barang promo, semua harga normal[cite: 1]
         qtyNormal = currentQty;
     }
 
@@ -2039,7 +2075,7 @@ function hitungDetailPromo(item, currentQty) {
     
     let promoText = '';
     
-    // Hanya tampilkan rincian jika HARGA PROMO dan HARGA NORMAL berlaku bersamaan
+    // Hanya tampilkan rincian jika HARGA PROMO dan HARGA NORMAL berlaku bersamaan[cite: 1]
     if (qtyPromo > 0 && qtyNormal > 0) {
         promoText = `
             <div class="mt-1.5 bg-amber-50 border border-amber-100 p-1.5 rounded text-[8.5px] text-amber-700 leading-relaxed shadow-sm">
@@ -2049,7 +2085,6 @@ function hitungDetailPromo(item, currentQty) {
             </div>
         `;
     }
-    // Jika hanya satu harga yang berlaku (qtyPromo == 0 atau qtyNormal == 0), promoText dibiarkan kosong.
 
     return { subtotal, promoText, qtyPromo, qtyNormal };
 }
